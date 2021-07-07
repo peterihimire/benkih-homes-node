@@ -13,4 +13,4 @@ const app = express()
 app.use('/api/users', usersRoute)
 
 const PORT = 4000;
-app.listen( PORT,() => console.log(`Server is running on port ${PORT}`));
+app.listen( PORT,() => console.log(`Server is running on port ${PORT}`))
