@@ -2,6 +2,12 @@ const fs = require('fs');
 const path = require('path');
 
 const express = require('express')
+
+// MODELS
+const sequelize = require("./util/database");
+// const Property = require("./models/property");
+// const User = require("./models/user");
+
 // ROUTES
 const usersRoute = require('./routes/users-route');
 
