@@ -9,11 +9,11 @@ const User = sequelize.define('user',{
     allowNull: false,
     primaryKey: true,
   },
-  // uuid:{
-  //   type: Sequelize.UUID,
-  //   defaultValue: Sequelize.UUIDV4,
-  //   allowNull: false,
-  // },
+  uuid:{
+    type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV4,
+    allowNull: false,
+  },
   fullname: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -26,9 +26,9 @@ const User = sequelize.define('user',{
     type: Sequelize.STRING,
     allowNull: false,
   },
-  // isAdmin: {
-  //   type: Sequelize.BOOLEAN,
-  //   defaultValue: false,
-  // },
+  isAdmin: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
 })
 module.exports = User;

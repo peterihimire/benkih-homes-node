@@ -6,16 +6,16 @@ const User = require('../models/user')
 // @access Public
 const signup = (req, res, next) => {
 
-  const fullName = req.body.fullName;
+  const fullname = req.body.fullname;
   const email = req.body.email;
   const password = req.body.password;
   // const admincode = req.body.admincode;
 
-  if(!fullName || !email || !password ){
+  if(!fullname || !email || !password ){
     res.status(200).json({ message: "Invalid Inputs passed, Please check your fields." });
   }
   User.create({
-    fullName: fullName,
+    fullname: fullname,
     email: email,
     password: password,
     isAdmin: true
