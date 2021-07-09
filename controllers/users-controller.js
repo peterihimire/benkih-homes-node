@@ -109,11 +109,18 @@ const login = (req, res, next) => {
       return bcrypt
         .compare(password, existingUser.password)
         .then((isMatch) => {
+          const token = jwt.sign(
+            { email: existingUser.email, userId: existingUser.uuid },
+            "jwt-secrete-key",
+            { expiresIn: "1h" },
+          );
           if (isMatch) {
             return res.status(200).json({
               status: "Successful",
               msg: "You just logged in",
               user: existingUser.fullname,
+              token: token,
+              admin: existingUser.isAdmin,
             });
           }
           return next(new HttpError("Login failed, Password error .", 401));
