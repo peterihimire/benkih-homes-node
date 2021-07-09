@@ -1,9 +1,8 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const express = require('express')
+const express = require("express");
 const bodyParser = require("body-parser");
-
 
 // MODELS
 const sequelize = require("./util/database");
@@ -13,9 +12,9 @@ const sequelize = require("./util/database");
 const HttpError = require("./models/http-error");
 
 // ROUTES
-const usersRoute = require('./routes/users-route');
+const usersRoute = require("./routes/users-route");
 
-const app = express()
+const app = express();
 
 // MIDDLEWARES
 app.use(bodyParser.json());
@@ -23,14 +22,13 @@ app.use(bodyParser.json());
 // ROUTES MIDDLEWARE
 
 // => /api/users/
-app.use('/api/users', usersRoute)
-
+app.use("/api/users", usersRoute);
 
 // ERROR HANDLING MIDDLEWARE FOR UNREGISTERED ROUTES
 app.use((req, res, next) => {
   const error = new HttpError(
     "could not find this route! Make sure the URL is correct.",
-    404
+    404,
   );
   throw error;
 });
@@ -49,11 +47,10 @@ app.use((error, req, res, next) => {
 
 const PORT = 4000;
 
-
 sequelize
   // .sync({ force: true })
   .sync()
   .then(() => {
-    app.listen( PORT,() => console.log(`Server is running on port ${PORT}`))
+    app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
   })
   .catch((err) => console.log(err));

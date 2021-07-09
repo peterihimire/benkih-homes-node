@@ -1,15 +1,15 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 
-const sequelize = require('../util/database');
+const sequelize = require("../util/database");
 
-const User = sequelize.define('user',{
+const User = sequelize.define("user", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  uuid:{
+  uuid: {
     type: Sequelize.UUID,
     defaultValue: Sequelize.UUIDV4,
     allowNull: false,
@@ -30,5 +30,5 @@ const User = sequelize.define('user',{
     type: Sequelize.BOOLEAN,
     defaultValue: false,
   },
-})
+});
 module.exports = User;
