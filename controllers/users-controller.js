@@ -3,7 +3,7 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// @route POST api/user/signup
+// @route POST api/users/signup
 // @desc To create or signup a user
 // @access Public
 const signup = (req, res, next) => {
@@ -86,7 +86,7 @@ const signup = (req, res, next) => {
     });
 };
 
-// @route POST api/user/login
+// @route POST api/users/login
 // @desc To login/authenticate a user
 // @access Public
 const login = (req, res, next) => {
@@ -140,5 +140,44 @@ const login = (req, res, next) => {
     });
 };
 
+// @route PUT api/users/id
+// @desc To update the data of a single user
+// @access Private
+const updateUserById = (req, res, next) => {
+  const userId = req.params.userId;
+  const { fullname } = req.body;
+
+  // findByPk replaced findById
+  User.findByPk(userId)
+    .then((user) => {
+      console.log(user);
+      if (!user) {
+        return next(
+          new HttpError("Account with the UserId does not exist.", 404),
+        );
+      }
+      return user;
+    })
+    .then((existingUser) => {
+      console.log(existingUser);
+      existingUser.fullname = fullname;
+      return existingUser.save();
+    })
+    .then((updatedUser) => {
+      res.status(200).json({
+        status: "Successful",
+        msg: "Account Updated",
+        user: updatedUser,
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
+
 exports.signup = signup;
 exports.login = login;
+exports.updateUserById = updateUserById;
