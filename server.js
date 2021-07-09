@@ -48,8 +48,8 @@ app.use((error, req, res, next) => {
 const PORT = 4000;
 
 sequelize
-  // .sync({ force: true })
-  .sync()
+  .sync({ force: true })
+  // .sync()
   .then(() => {
     app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
   })

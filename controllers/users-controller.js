@@ -105,8 +105,32 @@ const login = (req, res, next) => {
       }
       return existingUser;
     })
-    .then((existingUser) => {})
-    .catch();
+    .then((existingUser) => {
+      return bcrypt
+        .compare(password, existingUser.password)
+        .then((isMatch) => {
+          if (isMatch) {
+            return res.status(200).json({
+              status: "Successful",
+              msg: "You just logged in",
+              user: existingUser.fullname,
+            });
+          }
+          return next(new HttpError("Login failed, Password error .", 401));
+        })
+        .catch((error) => {
+          if (!error.statusCode) {
+            error.statusCode = 500;
+          }
+          next(error);
+        });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
 };
 
 exports.signup = signup;
