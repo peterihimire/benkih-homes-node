@@ -10,6 +10,8 @@ const sequelize = require("./util/database");
 // const Property = require("./models/property");
 // const User = require("./models/user");
 
+const HttpError = require("./models/http-error");
+
 // ROUTES
 const usersRoute = require('./routes/users-route');
 
@@ -23,11 +25,32 @@ app.use(bodyParser.json());
 // => /api/users/
 app.use('/api/users', usersRoute)
 
+
+// ERROR HANDLING MIDDLEWARE FOR UNREGISTERED ROUTES
+app.use((req, res, next) => {
+  const error = new HttpError(
+    "could not find this route! Make sure the URL is correct.",
+    404
+  );
+  throw error;
+});
+
+// ERROR HANDLING MIDDLEWARE
+app.use((error, req, res, next) => {
+  if (res.headerSent) {
+    return next(error);
+  }
+  res.status(error.code || 500);
+  res.json({
+    status: "Unsuccessful",
+    msg: error.message || "An unknown error occurred",
+  });
+});
+
 const PORT = 4000;
 
 
 sequelize
-  // sequelize special method [sync], looks through our models and creates tables for them , it syncs our model to the database by creating appropriate tables and relations for them. 
   // .sync({ force: true })
   .sync()
   .then(() => {

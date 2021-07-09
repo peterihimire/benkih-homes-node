@@ -1,4 +1,7 @@
+const HttpError = require("../models/http-error");
 const User = require('../models/user')
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 
 // @route POST api/user/signup
@@ -9,30 +12,66 @@ const signup = (req, res, next) => {
   const fullname = req.body.fullname;
   const email = req.body.email;
   const password = req.body.password;
-  // const admincode = req.body.admincode;
+  const admincode = req.body.admincode;
 
   if(!fullname || !email || !password ){
-    res.status(200).json({ message: "Invalid Inputs passed, Please check your fields." });
+    return next(new HttpError("Input missing required fields.", 400));
   }
-  User.create({
-    fullname: fullname,
-    email: email,
-    password: password,
-    isAdmin: true
-  })
-    .then((createdUser) => {
-      res.status(201).json({
-        status: 'Successful',
-        msg: 'Account Created !',
-        user: createdUser
-      })
+  User.findOne({where: {email: email}})
+    .then((user)=>{
+      if(user){
+        return next(new HttpError('Account already exist, login instead .', 422))
+      } else {
+        // FOR PASSWORD HASHING
+        return bcrypt
+          .hash(password, 12)
+          .then((hashedPassword) => {
+            // console.log(hashedPassword);
+            // FOR ADMIN ROLE
+            if(admincode !== 'secrete123'){
+              return  User.create({
+                fullname: fullname,
+                email: email,
+                password: hashedPassword,
+                isAdmin: false
+              })
+                .then((createdUser) => {
+                  res.status(201).json({
+                    status: 'Successful',
+                    msg: 'Account Created !',
+                    user: createdUser
+                  })
+                })
+                .catch((error) => {
+                  return console.log(error)
+                })
+            }
+            User.create({
+              fullname: fullname,
+              email: email,
+              password: hashedPassword,
+              isAdmin: true
+            })
+              .then((createdUser) => {
+                res.status(201).json({
+                  status: 'Successful',
+                  msg: 'Account Created !',
+                  user: createdUser
+                })
+              })
+              .catch((error) => {
+                return console.log(error)
+              })
+          })
+       
+      }
     })
     .catch((error) => {
-      return console.log(error)
+      if(!error.statusCode){
+        error.statusCode = 500;
+      }
+      next(error)
     })
-
-  // console.log('This is signup route')
-  // res.status(200).json({ message: "Yeah, I bet you , we are comming there!" });
 }
 
 exports.signup = signup;
