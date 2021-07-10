@@ -6,13 +6,14 @@ const bodyParser = require("body-parser");
 
 // MODELS
 const sequelize = require("./util/database");
-// const Property = require("./models/property");
-// const User = require("./models/user");
+const Property = require("./models/property");
+const User = require("./models/user");
 
 const HttpError = require("./models/http-error");
 
 // ROUTES
 const usersRoute = require("./routes/users-route");
+const propertiesRoute = require("./routes/properties-route");
 
 const app = express();
 
@@ -23,6 +24,8 @@ app.use(bodyParser.json());
 
 // => /api/users/
 app.use("/api/users", usersRoute);
+// => /api/properties/
+app.use("/api/properties", propertiesRoute);
 
 // ERROR HANDLING MIDDLEWARE FOR UNREGISTERED ROUTES
 app.use((req, res, next) => {
@@ -46,6 +49,10 @@ app.use((error, req, res, next) => {
 });
 
 const PORT = 4000;
+
+// RELATIONS OR SEQUELIZE ASSOCIATIONS
+Property.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasMany(Property);
 
 sequelize
   // .sync({ force: true })
