@@ -9,8 +9,8 @@ const router = express.Router();
 // /api/properties/new-property => POST
 router.post('/new-property', propertiesController.createProperty )
 
-// // /api/users/login => POST
-// router.post('/login', usersController.login )
+// /api/properties => GET
+router.get('/', propertiesController.getProperties )
 
 // // /api/users/userId => PUT
 // router.put('/:userId', usersController.updateUserById )

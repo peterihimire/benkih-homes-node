@@ -11,7 +11,6 @@ const createProperty = (req, res, next) => {
   const address = req.body.address;
   const amount = req.body.amount;
   const description = req.body.description;
-  const creator = req.body.creator;
   const latitude = req.body.latitude;
   const longitude = req.body.longitude;
   const bedroom = req.body.bedroom;
@@ -21,7 +20,8 @@ const createProperty = (req, res, next) => {
   const featrued = req.body.featrued;
   const recent = req.body.recent;
   const newProperty = req.body.newProperty;
-  const userId = req.body.creator;
+  // [userId] property is responsible for displaying the creator [User] object inside of the Property object, in the form of a Relations .
+  const userId = req.body.userId; 
 
   Property.create({
     title: title,
@@ -29,7 +29,6 @@ const createProperty = (req, res, next) => {
     address: address,
     amount: amount,
     description: description,
-    creator: creator,
     latitude: latitude,
     longitude: longitude,
     bedroom: bedroom,
@@ -56,4 +55,30 @@ const createProperty = (req, res, next) => {
     });
 };
 
+// @route GET api/properties
+// @desc To retrieve the data of all properties
+// @access Public
+const getProperties = (req, res, next) => {
+  Property.findAll({ include: [User] })
+    .then((properties) => {
+      if (!properties || properties.length === 0) {
+        const error = new Error("No properties found.");
+        error.code = 404;
+        return next(error);
+      }
+      res.status(200).json({
+        status: "Successful",
+        msg: "All Properties",
+        properties: properties,
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
+
 exports.createProperty = createProperty;
+exports.getProperties = getProperties;

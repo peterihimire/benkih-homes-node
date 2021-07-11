@@ -34,10 +34,6 @@ const Property = sequelize.define("property", {
     type: Sequelize.TEXT,
     allowNull: false,
   },
-  creator: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
   latitude: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -74,5 +70,9 @@ const Property = sequelize.define("property", {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
   },
+  // userId: {
+  //   type: Sequelize.TEXT,
+  //   allowNull: false,
+  // },
 });
 module.exports = Property;
