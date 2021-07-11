@@ -21,7 +21,7 @@ const createProperty = (req, res, next) => {
   const recent = req.body.recent;
   const newProperty = req.body.newProperty;
   // [userId] property is responsible for displaying the creator [User] object inside of the Property object, in the form of a Relations .
-  const userId = req.body.userId; 
+  const userId = req.body.userId;
 
   Property.create({
     title: title,
@@ -59,6 +59,7 @@ const createProperty = (req, res, next) => {
 // @desc To retrieve the data of all properties
 // @access Public
 const getProperties = (req, res, next) => {
+  // {include: [User]} adds the User object to the Property object via userId property
   Property.findAll({ include: [User] })
     .then((properties) => {
       if (!properties || properties.length === 0) {
@@ -80,5 +81,32 @@ const getProperties = (req, res, next) => {
     });
 };
 
+// @route GET api/properties/id
+// @desc To retrieve the data of a single property
+// @access Public
+const getPropertyById = (req, res, next) => {
+  const propertyId = req.params.propertyId;
+  Property.findByPk(propertyId)
+    .then((property) => {
+      if (!property) {
+        const error = new Error("Property not found for this particular id."); // Error handling with only error middleware
+        error.code = 404;
+        return next(error);
+      }
+      res.status(200).json({
+        status: "Successful",
+        msg: "Single Property",
+        property: property,
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
+
 exports.createProperty = createProperty;
 exports.getProperties = getProperties;
+exports.getPropertyById = getPropertyById;
