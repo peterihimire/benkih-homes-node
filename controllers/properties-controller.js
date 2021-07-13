@@ -1,11 +1,19 @@
 const HttpError = require("../models/http-error");
 const Property = require("../models/property");
 const User = require("../models/user");
+const { validationResult } = require("express-validator");
 
 // @route POST api/property
 // @desc To create a new property
 // @access Public
 const createProperty = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    next(
+      new HttpError("Invalid inputs passed, please check your fields.", 422),
+    );
+  }
+
   const title = req.body.title;
   const slug = req.body.slug;
   const address = req.body.address;
@@ -107,6 +115,20 @@ const getPropertyById = (req, res, next) => {
     });
 };
 
+// @route PUT api/properties/id
+// @desc To update the data of a single property
+// @access Public
+const updatePropertyById = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    next(
+      new HttpError("Invalid inputs passed, please check your fields.", 422),
+    );
+  }
+  const propertyid = req.params.propertId
+};
+
 exports.createProperty = createProperty;
 exports.getProperties = getProperties;
 exports.getPropertyById = getPropertyById;
+exports.updatePropertyById = updatePropertyById;
