@@ -125,7 +125,50 @@ const updatePropertyById = (req, res, next) => {
       new HttpError("Invalid inputs passed, please check your fields.", 422),
     );
   }
-  const propertyid = req.params.propertId
+  const propertyId = req.params.propertId;
+  const {
+    title,
+    slug,
+    address,
+    amount,
+    description,
+    longitude,
+    latitude,
+    bedroom,
+    bathroom,
+    propertyCity,
+    propertyState,
+    featrued,
+    recent,
+    newProperty,
+  } = req.body;
+
+  Property.findByPk(propertyId)
+    .then((property) => {
+      if (!property) {
+        return next(
+          new HttpError("No property found for this particular id.", 404),
+        );
+      }
+      return property;
+    })
+    .then((updatedProperty) => {
+      updatedProperty.title = title;
+      updatedProperty.slug = slug;
+      updatedProperty.address = address;
+      updatedProperty.amount = amount;
+      updatedProperty.description = description;
+      updatedProperty.longitude = longitude;
+      updatedProperty.latitude = latitude;
+
+      return updatedProperty.save();
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
 };
 
 exports.createProperty = createProperty;
