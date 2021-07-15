@@ -125,7 +125,7 @@ const updatePropertyById = (req, res, next) => {
       new HttpError("Invalid inputs passed, please check your fields.", 422),
     );
   }
-  const propertyId = req.params.propertId;
+  const propertyId = req.params.propertyId;
   const {
     title,
     slug,
@@ -160,8 +160,22 @@ const updatePropertyById = (req, res, next) => {
       updatedProperty.description = description;
       updatedProperty.longitude = longitude;
       updatedProperty.latitude = latitude;
+      updatedProperty.bedroom = bedroom;
+      updatedProperty.bathroom = bathroom;
+      updatedProperty.propertyCity = propertyCity;
+      updatedProperty.propertyState = propertyState;
+      updatedProperty.featrued = featrued;
+      updatedProperty.recent = recent;
+      updatedProperty.newnewProperty = newProperty;
 
       return updatedProperty.save();
+    })
+    .then((updatedProperty) => {
+      res.status(200).json({
+        status: "Successful",
+        msg: "Property updated",
+        property: updatedProperty,
+      });
     })
     .catch((error) => {
       if (!error.statusCode) {

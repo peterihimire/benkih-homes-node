@@ -15,4 +15,7 @@ router.get("/", propertiesController.getProperties);
 // /api/properties/propertyId => GET
 router.get("/:propertyId", propertiesController.getPropertyById);
 
+// /api/properties/propertyId => PUT
+router.put("/:propertyId", propertiesController.updatePropertyById);
+
 module.exports = router;
