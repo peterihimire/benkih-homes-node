@@ -2,6 +2,7 @@ const HttpError = require("../models/http-error");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Property = require("../models/property");
 
 // @route POST api/users/signup
 // @desc To create or signup a user
@@ -140,6 +141,35 @@ const login = (req, res, next) => {
     });
 };
 
+// @route GET api/admin/users
+// @desc To retrieve the data of all users
+// @access Private
+const getAllUsers = (req, res, next) => {
+  User.findAll({ include: Property })
+    .then((users) => {
+      if (!users || users.length === 0) {
+        const error = new Error("No users record found.");
+        error.code = 404;
+        return next(error);
+      }
+      return users;
+    })
+    .then((users) => {
+      res.status(200).json({
+        status: "Successful",
+        msg: "All users",
+        users: users,
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+  // .catch((error) => next(error));
+};
+
 // @route PUT api/users/id
 // @desc To update the data of a single user
 // @access Private
@@ -178,6 +208,40 @@ const updateUserById = (req, res, next) => {
     });
 };
 
+// @route DELETE api/admin/property
+// @desc To delete a user with a particular id
+// @access Public
+const deleteUserById = (req, res, next) => {
+  const userId = req.params.userId;
+  User.findByPk(userId)
+    .then((user) => {
+      if (!user) {
+        const error = new Error("User for this particular id does not exist.");
+        error.code = 404;
+        return next(error);
+      }
+      return user;
+    })
+    .then((user) => {
+      console.log(user);
+      return user.destroy();
+    })
+    .then((result) => {
+      res.status(200).json({
+        status: "Successful",
+        msg: "User Deleted",
+        user: result,
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
 exports.signup = signup;
 exports.login = login;
 exports.updateUserById = updateUserById;
+exports.deleteUserById = deleteUserById;
+exports.getAllUsers = getAllUsers;

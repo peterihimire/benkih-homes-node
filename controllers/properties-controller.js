@@ -185,7 +185,40 @@ const updatePropertyById = (req, res, next) => {
     });
 };
 
+// @route DELETE api/properties/id
+// @desc To delete the data of a single property
+// @access Private
+const deletePropertyById = (req, res, next) => {
+  const propertyId = req.params.propertyId;
+  Property.findByPk(propertyId)
+    .then((property) => {
+      if (!property) {
+        const error = new Error("Property not found for this particular id.");
+        error.code = 404;
+        return next(error);
+      }
+      return property;
+    })
+    .then((property) => {
+      return property.destroy();
+    })
+    .then((deletedProperty) => {
+      res.status(200).json({
+        status: "Successful",
+        msg: "Property Deleted",
+        user: deletedProperty,
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
+
 exports.createProperty = createProperty;
 exports.getProperties = getProperties;
 exports.getPropertyById = getPropertyById;
 exports.updatePropertyById = updatePropertyById;
+exports.deletePropertyById = deletePropertyById;

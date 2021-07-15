@@ -18,4 +18,7 @@ router.get("/:propertyId", propertiesController.getPropertyById);
 // /api/properties/propertyId => PUT
 router.put("/:propertyId", propertiesController.updatePropertyById);
 
+// /api/properties/propertyId => DELETE
+router.delete("/:propertyId", propertiesController.deletePropertyById);
+
 module.exports = router;
