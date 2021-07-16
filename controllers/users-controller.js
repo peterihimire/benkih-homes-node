@@ -208,7 +208,39 @@ const updateUserById = (req, res, next) => {
     });
 };
 
-// @route DELETE api/admin/property
+// @route GeT api/users/id
+// @desc To retrieve the data of a single user by id
+// @access Public
+const getUserById = (req, res, next) => {
+  const userId = req.params.userId;
+  User.findByPk(userId, { include: Property })
+    .then((user) => {
+      if (!user) {
+        return next(new HttpError("User not found for this specific id.", 404)); // Error handling with both error model and error middleware
+      }
+      res.status(200).json({
+        status: "Successful",
+        msg: "Single user",
+        user: user,
+      });
+    })
+    // User.findAll({ where: { Id: userId } })
+    //   .then((product) => {
+    //     res.status(200).json({
+    //       message: "Single user",
+    //       user: product[0],
+    //     });
+    //   })
+    //   .catch((err) => console.log(err));
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
+
+// @route DELETE api/property
 // @desc To delete a user with a particular id
 // @access Public
 const deleteUserById = (req, res, next) => {
@@ -245,3 +277,4 @@ exports.login = login;
 exports.updateUserById = updateUserById;
 exports.deleteUserById = deleteUserById;
 exports.getAllUsers = getAllUsers;
+exports.getUserById = getUserById;

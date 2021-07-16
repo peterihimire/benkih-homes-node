@@ -15,6 +15,9 @@ router.post("/login", usersController.login);
 // /api/users/ => GET
 router.get("/", usersController.getAllUsers);
 
+// /api/users/userId => GET
+router.get("/:userId", usersController.getUserById);
+
 // /api/users/userId => PUT
 router.put("/:userId", usersController.updateUserById);
 
