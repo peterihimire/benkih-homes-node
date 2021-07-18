@@ -119,6 +119,7 @@ const login = (req, res, next) => {
             return res.status(200).json({
               status: "Successful",
               msg: "You just logged in",
+              userId: existingUser.id,
               user: existingUser.fullname,
               token: token,
               admin: existingUser.isAdmin,
