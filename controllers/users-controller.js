@@ -39,7 +39,7 @@ const signup = (req, res, next) => {
                 .then((createdUser) => {
                   res.status(201).json({
                     status: "Successful",
-                    msg: "Account Created !",
+                    msg: "Your account has been created successfully !",
                     user: createdUser,
                   });
                 })
@@ -60,7 +60,7 @@ const signup = (req, res, next) => {
               .then((createdUser) => {
                 res.status(201).json({
                   status: "Successful",
-                  msg: "Account Created !",
+                  msg: "Your account has been created successfully !",
                   user: createdUser,
                 });
               })
@@ -110,17 +110,18 @@ const login = (req, res, next) => {
       return bcrypt
         .compare(password, existingUser.password)
         .then((isMatch) => {
-          const token = jwt.sign(
-            { email: existingUser.email, userId: existingUser.uuid },
-            "jwt-secrete-key",
-            { expiresIn: "1h" },
-          );
           if (isMatch) {
+            const token = jwt.sign(
+              { email: existingUser.email, userId: existingUser.id },
+              "jwt-secrete-key",
+              { expiresIn: "1h" },
+            );
+
             return res.status(200).json({
               status: "Successful",
               msg: "You just logged in",
               userId: existingUser.id,
-              user: existingUser.fullname,
+              fullname: existingUser.fullname,
               token: token,
               admin: existingUser.isAdmin,
             });

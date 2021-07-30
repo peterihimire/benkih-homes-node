@@ -25,7 +25,7 @@ const createProperty = (req, res, next) => {
   const bathroom = req.body.bathroom;
   const propertyCity = req.body.propertyCity;
   const propertyState = req.body.propertyState;
-  const featrued = req.body.featrued;
+  const featured = req.body.featured;
   const recent = req.body.recent;
   const newProperty = req.body.newProperty;
   // [userId] property is responsible for displaying the creator [User] object inside of the Property object, in the form of a Relations .
@@ -43,7 +43,7 @@ const createProperty = (req, res, next) => {
     bathroom: bathroom,
     propertyCity: propertyCity,
     propertyState: propertyState,
-    featrued: featrued,
+    featured: featured,
     recent: recent,
     newProperty: newProperty,
     userId: userId,

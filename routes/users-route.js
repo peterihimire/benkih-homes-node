@@ -2,7 +2,10 @@ const path = require("path");
 
 const express = require("express");
 
+const isAuth = require("../middleware/check-auth");
 const usersController = require("../controllers/users-controller");
+
+
 
 const router = express.Router();
 
@@ -16,7 +19,7 @@ router.post("/login", usersController.login);
 router.get("/", usersController.getAllUsers);
 
 // /api/users/userId => GET
-router.get("/:userId", usersController.getUserById);
+router.get("/:userId", isAuth, usersController.getUserById);
 
 // /api/users/userId => PUT
 router.put("/:userId", usersController.updateUserById);
