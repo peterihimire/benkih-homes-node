@@ -1,0 +1,10 @@
+{
+  "env": {
+    "DB_USER": "b529e49e8bde37",
+    "DB_PASSWORD": "db715d31",
+    "DB_NAME": "heroku_d5c6082890686f4",
+    "DB_HOST": "us-cdbr-east-04.cleardb.com",
+    "DB_DIALECT": "mysql",
+    "JWT_KEY": "jwt-secrete-key-247"
+  }
+}
