@@ -113,7 +113,7 @@ const login = (req, res, next) => {
           if (isMatch) {
             const token = jwt.sign(
               { email: existingUser.email, userId: existingUser.id },
-              "jwt-secrete-key",
+              process.env.JWT_KEY,
               { expiresIn: "1h" },
             );
 
