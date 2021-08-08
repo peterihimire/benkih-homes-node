@@ -3,6 +3,7 @@ const path = require("path");
 
 const express = require("express");
 const bodyParser = require("body-parser");
+const multer = require("multer");
 
 // MODELS
 const sequelize = require("./util/database");
@@ -15,10 +16,44 @@ const HttpError = require("./models/http-error");
 const usersRoute = require("./routes/users-route");
 const propertiesRoute = require("./routes/properties-route");
 
+// IMAGE-FILE
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + "-" + file.originalname);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
 const app = express();
 
 // MIDDLEWARES
+
+// for form body without file
 app.use(bodyParser.json());
+// for form body with file
+app.use(
+  multer({
+    limits: 500000,
+    storage: fileStorage,
+    fileFilter: fileFilter,
+  }).single("image"),
+);
+
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 // FOR C.O.R.S ERROR
 app.use((req, res, next) => {
@@ -55,6 +90,12 @@ app.use((req, res, next) => {
 app.use((error, req, res, next) => {
   if (res.headerSent) {
     return next(error);
+  }
+  // if error exist during image uplaod , delete file
+  if (req.file) {
+    fs.unlink(req.file.path, (err) => {
+      console.log(err);
+    });
   }
   res.status(error.code || 500);
   res.json({
