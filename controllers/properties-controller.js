@@ -34,9 +34,9 @@ const createProperty = (req, res, next) => {
   const featured = req.body.featured;
   const recent = req.body.recent;
   const newProperty = req.body.newProperty;
-
   // [userId] property is responsible for displaying the creator [User] object inside of the Property object, in the form of a Relations .
   const userId = req.body.userId;
+  console.log(image);
 
   Property.create({
     title: title,

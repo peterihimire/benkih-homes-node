@@ -51,7 +51,7 @@ app.use(
     limits: 500000,
     storage: fileStorage,
     fileFilter: fileFilter,
-  }).array("image", 3),
+  }).single("image"),
 );
 
 // FOR IMAGES
