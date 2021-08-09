@@ -16,7 +16,7 @@ const HttpError = require("./models/http-error");
 const usersRoute = require("./routes/users-route");
 const propertiesRoute = require("./routes/properties-route");
 
-// IMAGE-FILE
+// IMAGE-FILE METHODS
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "images");
@@ -42,17 +42,19 @@ const app = express();
 
 // MIDDLEWARES
 
-// for form body without file
+// FOR FORM BODY WITHOUT FILE
 app.use(bodyParser.json());
-// for form body with file
+
+// FOR FORM BODY WITH FILE
 app.use(
   multer({
     limits: 500000,
     storage: fileStorage,
     fileFilter: fileFilter,
-  }).single("image"),
+  }).array("image", 3),
 );
 
+// FOR IMAGES
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 // FOR C.O.R.S ERROR
@@ -67,10 +69,13 @@ app.use((req, res, next) => {
     "Access-Control-Allow-Headers",
     "Content-Type,Accept, Origin, X-Requested-With, Authorization",
   );
+  if ("OPTIONS" === req.method) {
+    res.sendStatus(200);
+  }
   next();
 });
 
-// ROUTES MIDDLEWARE
+// FOR ROUTES
 
 // => /api/users/
 app.use("/api/users", usersRoute);
@@ -86,7 +91,7 @@ app.use((req, res, next) => {
   throw error;
 });
 
-// ERROR HANDLING MIDDLEWARE
+// FOR ERROR
 app.use((error, req, res, next) => {
   if (res.headerSent) {
     return next(error);

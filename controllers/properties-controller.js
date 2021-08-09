@@ -14,6 +14,11 @@ const createProperty = (req, res, next) => {
     );
   }
 
+  // checks for image file
+  if (!req.file) {
+    next(new HttpError("Please provide an image. ", 422));
+  }
+
   const title = req.body.title;
   const slug = req.body.slug;
   const address = req.body.address;
@@ -23,11 +28,13 @@ const createProperty = (req, res, next) => {
   const longitude = req.body.longitude;
   const bedroom = req.body.bedroom;
   const bathroom = req.body.bathroom;
+  const image = req.file.path;
   const propertyCity = req.body.propertyCity;
   const propertyState = req.body.propertyState;
   const featured = req.body.featured;
   const recent = req.body.recent;
   const newProperty = req.body.newProperty;
+
   // [userId] property is responsible for displaying the creator [User] object inside of the Property object, in the form of a Relations .
   const userId = req.body.userId;
 
@@ -41,11 +48,13 @@ const createProperty = (req, res, next) => {
     longitude: longitude,
     bedroom: bedroom,
     bathroom: bathroom,
+    image: image,
     propertyCity: propertyCity,
     propertyState: propertyState,
     featured: featured,
     recent: recent,
     newProperty: newProperty,
+
     userId: userId,
   })
     .then((property) => {
