@@ -71,8 +71,9 @@ app.use((req, res, next) => {
   );
   if ("OPTIONS" === req.method) {
     res.sendStatus(200);
+  } else {
+    next();
   }
-  next();
 });
 
 // FOR ROUTES
@@ -116,8 +117,8 @@ Property.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Property);
 
 sequelize
-  .sync({ force: true })
-  // .sync()
+  // .sync({ force: true })
+  .sync()
   .then(() => {
     app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
   })
