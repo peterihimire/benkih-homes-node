@@ -28,15 +28,19 @@ const createProperty = (req, res, next) => {
   const longitude = req.body.longitude;
   const bedroom = req.body.bedroom;
   const bathroom = req.body.bathroom;
-  const image = req.file.path;
+  const imagez = req.file.path;
   const propertyCity = req.body.propertyCity;
   const propertyState = req.body.propertyState;
+  const furnished = req.body.furnished;
+  const inDoorPool = req.body.inDoorPool;
+  const outDoorPool = req.body.outDoorPool;
+  const miniTheater = req.body.miniTheater;
   const featured = req.body.featured;
   const recent = req.body.recent;
   const newProperty = req.body.newProperty;
   // [userId] property is responsible for displaying the creator [User] object inside of the Property object, in the form of a Relations .
   const userId = req.body.userId;
-  console.log(image);
+  console.log(imagez);
 
   Property.create({
     title: title,
@@ -48,9 +52,13 @@ const createProperty = (req, res, next) => {
     longitude: longitude,
     bedroom: bedroom,
     bathroom: bathroom,
-    image: image,
+    imagez: imagez,
     propertyCity: propertyCity,
     propertyState: propertyState,
+    furnished: furnished,
+    inDoorPool: inDoorPool,
+    outDoorPool: outDoorPool,
+    miniTheater: miniTheater,
     featured: featured,
     recent: recent,
     newProperty: newProperty,

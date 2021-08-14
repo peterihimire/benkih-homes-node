@@ -62,6 +62,22 @@ const Property = sequelize.define("property", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  furnished: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
+  inDoorPool: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
+  outDoorPool: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
+  miniTheater: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
   featured: {
     type: Sequelize.BOOLEAN,
     defaultValue: false,

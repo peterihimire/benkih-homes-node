@@ -51,7 +51,7 @@ app.use(
     limits: 500000,
     storage: fileStorage,
     fileFilter: fileFilter,
-  }).array("image", 3),
+  }).array("imagez", 3),
 );
 
 // FOR IMAGES
@@ -116,8 +116,8 @@ Property.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Property);
 
 sequelize
-  // .sync({ force: true })
-  .sync()
+  .sync({ force: true })
+  // .sync()
   .then(() => {
     app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
   })
