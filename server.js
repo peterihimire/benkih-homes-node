@@ -51,7 +51,7 @@ app.use(
     limits: 500000,
     storage: fileStorage,
     fileFilter: fileFilter,
-  }).array("imagez", 3),
+  }).array("imagez", 3), //'imagez' is the name of our file input field
 );
 
 // FOR IMAGES

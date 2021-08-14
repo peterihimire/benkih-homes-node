@@ -16,7 +16,7 @@ const createProperty = (req, res, next) => {
 
   // checks for image file
   if (!req.file) {
-    next(new HttpError("Please provide an image. ", 422));
+    next(new HttpError("Please provide an imagez. ", 422));
   }
 
   const title = req.body.title;
