@@ -116,8 +116,8 @@ Property.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Property);
 
 sequelize
-  // .sync({ force: true })
-  .sync()
+  .sync({ force: true })
+  // .sync()
   .then(() => {
     app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
   })
