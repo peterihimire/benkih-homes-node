@@ -50,7 +50,7 @@ const Property = sequelize.define("property", {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  image: {
+  imagez: {
     type: Sequelize.STRING,
     allowNull: false,
   },
