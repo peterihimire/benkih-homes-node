@@ -61,7 +61,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 // FOR C.O.R.S ERROR
 app.use(
   cors({
-    origin: ["https://bnk-homes.netlify.app", "http://localhost:3000"]
+    origin: ["https://bnk-homes.netlify.app", "http://localhost:3000"],
     methods: ["GET, POST, PUT, PATCH, DELETE, OPTIONS"],
     allowedHeaders: [
       "Content-Type,Accept, Origin, X-Requested-With, Authorization",
