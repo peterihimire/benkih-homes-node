@@ -4,6 +4,7 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const cors = require("cors");
 
 // MODELS
 const sequelize = require("./util/database");
@@ -58,23 +59,33 @@ app.use(
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 // FOR C.O.R.S ERROR
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://bnk-homes.netlify.app");
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type,Accept, Origin, X-Requested-With, Authorization",
-  );
-  if ("OPTIONS" === req.method) {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-});
+app.use(
+  cors({
+    origin: ["https://bnk-homes.netlify.app", "http://localhost:3000"]
+    methods: ["GET, POST, PUT, PATCH, DELETE, OPTIONS"],
+    allowedHeaders: [
+      "Content-Type,Accept, Origin, X-Requested-With, Authorization",
+    ],
+  }),
+);
+
+// app.use((req, res, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "https://bnk-homes.netlify.app");
+//   res.setHeader("Access-Control-Allow-Credentials", true);
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+//   );
+//   res.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "Content-Type,Accept, Origin, X-Requested-With, Authorization",
+//   );
+//   if ("OPTIONS" === req.method) {
+//     res.sendStatus(200);
+//   } else {
+//     next();
+//   }
+// });
 
 // FOR ROUTES
 
