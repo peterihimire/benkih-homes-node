@@ -46,7 +46,8 @@ const app = express();
 // FOR C.O.R.S ERROR
 app.use(
   cors({
-    origin: "*",
+    // origin: "*",
+    origin: ["https://bnk-homes.netlify.app", "http://localhost:3000"],
     methods: ["GET, POST, PUT, PATCH, DELETE, OPTIONS"],
     allowedHeaders: [
       "Content-Type,Accept, Origin, X-Requested-With, Authorization",
