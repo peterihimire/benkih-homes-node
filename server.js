@@ -43,6 +43,17 @@ const app = express();
 
 // MIDDLEWARES
 
+// FOR C.O.R.S ERROR
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET, POST, PUT, PATCH, DELETE, OPTIONS"],
+    allowedHeaders: [
+      "Content-Type,Accept, Origin, X-Requested-With, Authorization",
+    ],
+  }),
+);
+
 // FOR FORM BODY WITHOUT FILE
 app.use(bodyParser.json());
 
@@ -58,16 +69,16 @@ app.use(
 // FOR IMAGES
 app.use("/images", express.static(path.join(__dirname, "images")));
 
-// FOR C.O.R.S ERROR
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET, POST, PUT, PATCH, DELETE, OPTIONS"],
-    allowedHeaders: [
-      "Content-Type,Accept, Origin, X-Requested-With, Authorization",
-    ],
-  }),
-);
+// // FOR C.O.R.S ERROR
+// app.use(
+//   cors({
+//     origin: "*",
+//     methods: ["GET, POST, PUT, PATCH, DELETE, OPTIONS"],
+//     allowedHeaders: [
+//       "Content-Type,Accept, Origin, X-Requested-With, Authorization",
+//     ],
+//   }),
+// );
 
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "https://bnk-homes.netlify.app");
