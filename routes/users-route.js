@@ -10,21 +10,21 @@ const usersController = require("../controllers/users-controller");
 const router = express.Router();
 
 // /api/users/signup => POST
-router.post("/signup", usersController.signup);
+router.post("/users/signup", usersController.signup);
 
 // /api/users/login => POST
-router.post("/login", usersController.login);
+router.post("/users/login", usersController.login);
 
 // /api/users/ => GET
-router.get("/", usersController.getAllUsers);
+router.get("/users", usersController.getAllUsers);
 
 // /api/users/userId => GET
-router.get("/:userId", isAuth, usersController.getUserById);
+router.get("/users/:userId", isAuth, usersController.getUserById);
 
 // /api/users/userId => PUT
-router.put("/:userId", usersController.updateUserById);
+router.put("/users/:userId", usersController.updateUserById);
 
 // /api/users/userId => DELETE
-router.delete("/:userId", usersController.deleteUserById);
+router.delete("/users/:userId", usersController.deleteUserById);
 
 module.exports = router;

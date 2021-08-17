@@ -43,18 +43,6 @@ const app = express();
 
 // MIDDLEWARES
 
-// FOR C.O.R.S ERROR
-app.use(
-  cors({
-    // origin: "*",
-    origin: ["https://bnk-homes.netlify.app", "http://localhost:3000"],
-    methods: ["GET, POST, PUT, PATCH, DELETE, OPTIONS"],
-    allowedHeaders: [
-      "Content-Type,Accept, Origin, X-Requested-With, Authorization",
-    ],
-  }),
-);
-
 // FOR FORM BODY WITHOUT FILE
 app.use(bodyParser.json());
 
@@ -70,7 +58,7 @@ app.use(
 // FOR IMAGES
 app.use("/images", express.static(path.join(__dirname, "images")));
 
-// // FOR C.O.R.S ERROR
+// FOR C.O.R.S ERROR
 // app.use(
 //   cors({
 //     origin: "*",
@@ -81,30 +69,33 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 //   }),
 // );
 
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "https://bnk-homes.netlify.app");
-//   res.setHeader("Access-Control-Allow-Credentials", true);
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-//   );
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "Content-Type,Accept, Origin, X-Requested-With, Authorization",
-//   );
-//   if ("OPTIONS" === req.method) {
-//     res.sendStatus(200);
-//   } else {
-//     next();
-//   }
-// });
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", [
+    "https://bnk-homes.netlify.app",
+    "http://localhost:3000",
+  ]);
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type,Accept, Origin, X-Requested-With, Authorization",
+  );
+  if ("OPTIONS" === req.method) {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // FOR ROUTES
 
 // => /api/users/
-app.use("/api/users", usersRoute);
+app.use("/api", usersRoute);
 // => /api/properties/
-app.use("/api/properties", propertiesRoute);
+app.use("/api", propertiesRoute);
 
 // ERROR HANDLING MIDDLEWARE FOR UNREGISTERED ROUTES
 app.use((req, res, next) => {
@@ -142,7 +133,8 @@ User.hasMany(Property);
 sequelize
   // .sync({ force: true })
   .sync()
-  .then(() => {
+  .then((result) => {
+    console.log(result);
     app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
   })
   .catch((err) => console.log(err));
