@@ -38,7 +38,7 @@ const createProperty = (req, res, next) => {
   const recent = req.body.recent;
   const newProperty = req.body.newProperty;
   // [userId] property is responsible for displaying the creator [User] object inside of the Property object, in the form of a Relations .
-  const imagez = req.file.path;
+  // const imagez = req.file.path;
   const userId = req.body.userId;
   console.log(imagez);
 
@@ -61,7 +61,7 @@ const createProperty = (req, res, next) => {
     featured: featured,
     recent: recent,
     newProperty: newProperty,
-    imagez: imagez,
+    // imagez: imagez,
     userId: userId,
   })
     .then((property) => {
