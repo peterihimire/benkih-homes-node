@@ -40,7 +40,7 @@ const createProperty = (req, res, next) => {
   // [userId] property is responsible for displaying the creator [User] object inside of the Property object, in the form of a Relations .
   // const imagez = req.file.path;
   const userId = req.body.userId;
-  console.log(imagez);
+  // console.log(imagez);
 
   Property.create({
     title: title,
