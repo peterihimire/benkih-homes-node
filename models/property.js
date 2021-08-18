@@ -86,10 +86,10 @@ const Property = sequelize.define("property", {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
   },
-  imagez: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
+  // imagez: {
+  //   type: Sequelize.STRING,
+  //   allowNull: false,
+  // },
   // userId: {
   //   type: Sequelize.TEXT,
   //   allowNull: false,
