@@ -16,7 +16,7 @@ const createProperty = (req, res, next) => {
 
   // checks for image file
   if (!req.file) {
-    next(new HttpError("Please provide an imagez. ", 422));
+    next(new HttpError("Please provide imagez. ", 422));
   }
 
   const title = req.body.title;
@@ -28,7 +28,6 @@ const createProperty = (req, res, next) => {
   const longitude = req.body.longitude;
   const bedroom = req.body.bedroom;
   const bathroom = req.body.bathroom;
-  const imagez = req.file.path;
   const propertyCity = req.body.propertyCity;
   const propertyState = req.body.propertyState;
   const furnished = req.body.furnished;
@@ -39,6 +38,7 @@ const createProperty = (req, res, next) => {
   const recent = req.body.recent;
   const newProperty = req.body.newProperty;
   // [userId] property is responsible for displaying the creator [User] object inside of the Property object, in the form of a Relations .
+  const imagez = req.file.path;
   const userId = req.body.userId;
   console.log(imagez);
 
@@ -52,7 +52,6 @@ const createProperty = (req, res, next) => {
     longitude: longitude,
     bedroom: bedroom,
     bathroom: bathroom,
-    imagez: imagez,
     propertyCity: propertyCity,
     propertyState: propertyState,
     furnished: furnished,
@@ -62,7 +61,7 @@ const createProperty = (req, res, next) => {
     featured: featured,
     recent: recent,
     newProperty: newProperty,
-
+    imagez: imagez,
     userId: userId,
   })
     .then((property) => {
@@ -183,7 +182,7 @@ const updatePropertyById = (req, res, next) => {
       updatedProperty.propertyState = propertyState;
       updatedProperty.featrued = featrued;
       updatedProperty.recent = recent;
-      updatedProperty.newnewProperty = newProperty;
+      updatedProperty.newProperty = newProperty;
 
       return updatedProperty.save();
     })
