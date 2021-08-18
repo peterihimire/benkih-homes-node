@@ -14,10 +14,10 @@ const createProperty = (req, res, next) => {
     );
   }
 
-  // checks for image file
-  if (!req.file) {
-    next(new HttpError("Please provide imagez. ", 422));
-  }
+  // // checks for image file
+  // if (!req.file) {
+  //   next(new HttpError("Please provide imagez. ", 422));
+  // }
 
   const title = req.body.title;
   const slug = req.body.slug;
