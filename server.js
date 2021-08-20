@@ -6,6 +6,10 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const cors = require("cors");
 
+const aws = require("aws-sdk");
+const multerS3 = require("multer-s3");
+const url = require("url");
+
 // MODELS
 const sequelize = require("./util/database");
 const Property = require("./models/property");
@@ -18,14 +22,14 @@ const usersRoute = require("./routes/users-route");
 const propertiesRoute = require("./routes/properties-route");
 
 // IMAGE-FILE METHODS
-const fileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "images");
-  },
-  filename: (req, file, cb) => {
-    cb(null, new Date().toISOString() + "-" + file.originalname);
-  },
-});
+// const fileStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "images");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, new Date().toISOString() + "-" + file.originalname);
+//   },
+// });
 
 const fileFilter = (req, file, cb) => {
   if (
@@ -39,6 +43,13 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// AMAZON S3 BUCKET FILE STORAGE SETTINGS
+const s3 = new aws.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRETE_KEY,
+  Bucket: process.env.AWS_BUCKET,
+});
+
 const app = express();
 
 // MIDDLEWARES
@@ -47,16 +58,31 @@ const app = express();
 app.use(bodyParser.json());
 
 // FOR FORM BODY WITH FILE
+// app.use(
+//   multer({
+//     limits: 500000,
+//     storage: fileStorage,
+//     fileFilter: fileFilter,
+//   }).single("imagez"), //'imagez' is the name of our file input field
+// );
+
 app.use(
   multer({
-    limits: 500000,
-    storage: fileStorage,
+    storage: multerS3({
+      s3: s3,
+      bucket: process.env.AWS_BUCKET,
+      acl: "public-read",
+      key: (req, file, cb) => {
+        cb(null, new Date().toISOString() + "-" + file.originalname);
+      },
+    }),
+    limits: { fileSize: 2000000 }, // In bytes: 2000000 bytes = 2 MB
     fileFilter: fileFilter,
-  }).single("imagez"), //'imagez' is the name of our file input field
+  }).single("image"),
 );
 
-// FOR IMAGES
-app.use("/images", express.static(path.join(__dirname, "images")));
+// // FOR IMAGES
+// app.use("/images", express.static(path.join(__dirname, "images")));
 
 // FOR C.O.R.S ERROR
 // app.use(
@@ -70,7 +96,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 // );
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://bnk-homes.netlify.app");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Credentials", true);
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -128,8 +154,8 @@ Property.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Property);
 
 sequelize
-  // .sync({ force: true })
-  .sync()
+  .sync({ force: true })
+  // .sync()
   .then((result) => {
     console.log(result);
     app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

@@ -14,10 +14,10 @@ const createProperty = (req, res, next) => {
     );
   }
 
-  // // checks for image file
-  // if (!req.file) {
-  //   next(new HttpError("Please provide imagez. ", 422));
-  // }
+  // checks for image file
+  if (!req.file) {
+    next(new HttpError("Please provide image. ", 422));
+  }
 
   const title = req.body.title;
   const slug = req.body.slug;
@@ -39,8 +39,12 @@ const createProperty = (req, res, next) => {
   const newProperty = req.body.newProperty;
   // [userId] property is responsible for displaying the creator [User] object inside of the Property object, in the form of a Relations .
   // const imagez = req.file.path;
+  // THE FILE PATH [URL] OF THE IMAGE IS SENT TO THE DATABASE
+  // "key" for fileName and "location" for fileUrl or path
+  // const image = req.file.key;
+  const image = req.file.location;
   const userId = req.body.userId;
-  // console.log(imagez);
+  console.log(image);
 
   Property.create({
     title: title,
@@ -61,7 +65,7 @@ const createProperty = (req, res, next) => {
     featured: featured,
     recent: recent,
     newProperty: newProperty,
-    // imagez: imagez,
+    image: image,
     userId: userId,
   })
     .then((property) => {
