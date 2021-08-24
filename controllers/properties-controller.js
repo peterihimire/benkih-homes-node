@@ -15,8 +15,8 @@ const createProperty = (req, res, next) => {
   }
 
   // checks for image file
-  if (!req.file) {
-    next(new HttpError("Please provide image. ", 422));
+  if (!req.files) {
+    next(new HttpError("Please provide at least one[1] image. ", 422));
   }
 
   const title = req.body.title;
@@ -38,14 +38,19 @@ const createProperty = (req, res, next) => {
   const recent = req.body.recent;
   const newProperty = req.body.newProperty;
   // [userId] property is responsible for displaying the creator [User] object inside of the Property object, in the form of a Relations .
-  // const imagez = req.file.path;
-  // THE FILE PATH [URL] OF THE IMAGE IS SENT TO THE DATABASE
-  // "key" for fileName and "location" for fileUrl or path
-  // const image = req.file.key;
-  const image = req.file.location;
+  const propertyImages = req.files;
   const userId = req.body.userId;
-  console.log(image);
+  console.log(propertyImages);
 
+  // LOOPS THROUGH ALL THE IMAGES AND SAVES [URL] TO DATABASE
+  const imagesArray = [];
+  for (let i = 0; i < propertyImages.length; i++) {
+    fileLocation = propertyImages[i].location;
+    console.log("filenm", fileLocation);
+    imagesArray.push(fileLocation);
+  }
+
+  // SAVES TO DATABASE [MySQL-SEQUELIZE]
   Property.create({
     title: title,
     slug: slug,
@@ -65,7 +70,7 @@ const createProperty = (req, res, next) => {
     featured: featured,
     recent: recent,
     newProperty: newProperty,
-    image: image,
+    propertyImages: imagesArray,
     userId: userId,
   })
     .then((property) => {

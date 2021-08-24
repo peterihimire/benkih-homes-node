@@ -4,11 +4,9 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const multer = require("multer");
-const cors = require("cors");
 
 const aws = require("aws-sdk");
 const multerS3 = require("multer-s3");
-const url = require("url");
 
 // MODELS
 const sequelize = require("./util/database");
@@ -21,35 +19,28 @@ const HttpError = require("./models/http-error");
 const usersRoute = require("./routes/users-route");
 const propertiesRoute = require("./routes/properties-route");
 
-// IMAGE-FILE METHODS
-// const fileStorage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "images");
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, new Date().toISOString() + "-" + file.originalname);
-//   },
-// });
-
-const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg"
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
 // AMAZON S3 BUCKET FILE STORAGE SETTINGS
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY,
   secretAccessKey: process.env.AWS_SECRETE_KEY,
   Bucket: process.env.AWS_BUCKET,
 });
+//  Check File Type
+function checkFileType(file, cb) {
+  // Allowed ext
+  const filetypes = /jpeg|jpg|png|gif/;
+  // Check ext
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  // Check mime
+  const mimetype = filetypes.test(file.mimetype);
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb("Error: Images Only!");
+  }
+}
 
+// EXPRESS APP INITIALIZATION
 const app = express();
 
 // MIDDLEWARES
@@ -58,42 +49,30 @@ const app = express();
 app.use(bodyParser.json());
 
 // FOR FORM BODY WITH FILE
-// app.use(
-//   multer({
-//     limits: 500000,
-//     storage: fileStorage,
-//     fileFilter: fileFilter,
-//   }).single("imagez"), //'imagez' is the name of our file input field
-// );
 
+// FOR MULTIPLE IMAGE UPLOAD TO AMAZON S3 BUCKET
 app.use(
   multer({
     storage: multerS3({
       s3: s3,
       bucket: process.env.AWS_BUCKET,
       acl: "public-read",
-      key: (req, file, cb) => {
-        cb(null, new Date().toISOString() + "-" + file.originalname);
+      key: function (req, file, cb) {
+        cb(
+          null,
+          path.basename(file.originalname, path.extname(file.originalname)) +
+            "-" +
+            Date.now() +
+            path.extname(file.originalname),
+        );
       },
     }),
     limits: { fileSize: 2000000 }, // In bytes: 2000000 bytes = 2 MB
-    fileFilter: fileFilter,
-  }).single("image"),
+    fileFilter: function (req, file, cb) {
+      checkFileType(file, cb);
+    },
+  }).array("propertyImages", 3),
 );
-
-// // FOR IMAGES
-// app.use("/images", express.static(path.join(__dirname, "images")));
-
-// FOR C.O.R.S ERROR
-// app.use(
-//   cors({
-//     origin: "*",
-//     methods: ["GET, POST, PUT, PATCH, DELETE, OPTIONS"],
-//     allowedHeaders: [
-//       "Content-Type,Accept, Origin, X-Requested-With, Authorization",
-//     ],
-//   }),
-// );
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

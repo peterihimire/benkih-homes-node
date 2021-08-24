@@ -86,9 +86,15 @@ const Property = sequelize.define("property", {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
   },
-  image: {
+  propertyImages: {
     type: Sequelize.STRING,
     allowNull: false,
+    get() {
+      return this.getDataValue("propertyImages").split(";");
+    },
+    set(val) {
+      this.setDataValue("propertyImages", val.join(";"));
+    },
   },
   // userId: {
   //   type: Sequelize.TEXT,
