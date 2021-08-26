@@ -46,7 +46,7 @@ const createProperty = (req, res, next) => {
   const imagesArray = [];
   for (let i = 0; i < propertyImages.length; i++) {
     fileLocation = propertyImages[i].location;
-    console.log("filenm", fileLocation);
+    console.log("fileurl", fileLocation);
     imagesArray.push(fileLocation);
   }
 
