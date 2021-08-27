@@ -45,7 +45,7 @@ const createProperty = (req, res, next) => {
   // LOOPS THROUGH ALL THE IMAGES AND SAVES [URL] TO DATABASE
   const imagesArray = [];
   for (let i = 0; i < propertyImages.length; i++) {
-    fileLocation = propertyImages[i].location;
+    let fileLocation = propertyImages[i].location;
     console.log("fileurl", fileLocation);
     imagesArray.push(fileLocation);
   }
